@@ -31,8 +31,8 @@ Macro Flags:
 #include <winsock.h>
 #endif
 
-#include <mysql/mysql.h>
-#include <mysql/errmsg.h>
+#include <mysql.h>
+#include <errmsg.h>
 
 #include <string>
 #include <ctime>
