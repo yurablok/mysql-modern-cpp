@@ -445,6 +445,11 @@ namespace daotk {
 				return count() == 0;
 			}
 
+			// return true if the result is valid
+			bool is_valid() {
+				return my_conn != nullptr;
+			}
+
 			// return true if passed the last row
 			bool eof() {
 				check_condition();
