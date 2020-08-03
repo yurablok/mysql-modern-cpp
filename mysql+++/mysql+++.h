@@ -318,7 +318,7 @@ namespace daotk {
 			std::vector< std::vector<std::string> > rows;
 			std::vector< std::vector<std::string> >::iterator current_row_itr;
 			std::vector< std::string > fields_names;
-			unsigned int num_fields;
+			unsigned int num_fields = 0;
 
 
 			result(MYSQL* _my_conn, bool fetch_now = false)
@@ -410,6 +410,12 @@ namespace daotk {
 			void fetch() {
 				if (fetched) throw mysqlpp_exception(mysqlpp_exception::result_already_fetched);
 				MYSQL_RES* _res = mysql_store_result(my_conn);
+
+				if (_res == nullptr) {
+					fetched = true;
+					num_fields = 0;
+					return;
+				}
 
 				num_fields = mysql_num_fields(_res);
 				rows.reserve(num_fields);
