@@ -122,7 +122,8 @@ namespace daotk {
 		public:
 			enum error_code {
 				result_already_fetched,
-				empty_result
+				empty_result,
+				wrong_column_index
 			};
 
 		protected:
@@ -316,6 +317,7 @@ namespace daotk {
 			// used only when `mode == mode_fetch'
 			std::vector< std::vector<std::string> > rows;
 			std::vector< std::vector<std::string> >::iterator current_row_itr;
+			std::vector< std::string > fields_names;
 			unsigned int num_fields;
 
 
@@ -362,6 +364,7 @@ namespace daotk {
 
 				rows = std::move(r.rows);
 				current_row_itr = r.current_row_itr;
+				fields_names = std::move(r.fields_names);
 
 				r.my_conn = nullptr;
 				r.fetched = false;
@@ -375,6 +378,7 @@ namespace daotk {
 
 				rows = std::move(r.rows);
 				current_row_itr = r.current_row_itr;
+				fields_names = std::move(r.fields_names);
 
 				r.my_conn = nullptr;
 				r.fetched = false;
@@ -395,6 +399,7 @@ namespace daotk {
 				}
 				else {
 					rows.clear();
+					fields_names.clear();
 				}
 
 				my_conn = nullptr;
@@ -407,6 +412,9 @@ namespace daotk {
 				MYSQL_RES* _res = mysql_store_result(my_conn);
 
 				num_fields = mysql_num_fields(_res);
+				rows.reserve(num_fields);
+				fields_names.resize(num_fields);
+
 				if (num_fields > 0) {
 					while (MYSQL_ROW _row = mysql_fetch_row(_res)) {
 						auto fetch_lengths = mysql_fetch_lengths(_res);
@@ -417,7 +425,9 @@ namespace daotk {
 							rowdata.push_back(std::string(_row[i], fetch_lengths[i]));
 						rows.push_back(rowdata);
 					}
-
+					for (unsigned int i = 0; i < num_fields; i++) {
+						fields_names[i] = _res->fields[i].name;
+					}
 					current_row_itr = rows.begin();
 				}
 
@@ -438,6 +448,16 @@ namespace daotk {
 				check_condition();
 
 				return num_fields;
+			}
+
+			// return field column name
+			const std::string& field_name(int column) {
+				check_condition();
+
+				if (column >= num_fields) {
+					throw mysqlpp_exception(mysqlpp_exception::wrong_column_index);
+				}
+				return fields_names[column];
 			}
 
 			// return true if no data was returned
