@@ -551,8 +551,10 @@ namespace daotk {
 
 			bool get_value(int i, bool& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = false;
+					return false;
+				}
 				try {
 					value = (std::stoi(s) != 0);
 					return true;
@@ -564,8 +566,10 @@ namespace daotk {
 
 			bool get_value(int i, int& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<int>::max();
+					return false;
+				}
 				try {
 					value = std::stoi(s);
 					return true;
@@ -577,8 +581,10 @@ namespace daotk {
 
 			bool get_value(int i, unsigned int& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<unsigned int>::max();
+					return false;
+				}
 				try {
 					value = (unsigned int)std::stoul(s);
 					return true;
@@ -590,8 +596,10 @@ namespace daotk {
 
 			bool get_value(int i, long& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<long>::max();
+					return false;
+				}
 				try {
 					value = std::stol(s);
 					return true;
@@ -603,8 +611,10 @@ namespace daotk {
 
 			bool get_value(int i, unsigned long& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<unsigned long>::max();
+					return false;
+				}
 				try {
 					value = std::stoul(s);
 					return true;
@@ -616,8 +626,10 @@ namespace daotk {
 
 			bool get_value(int i, long long& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<long long>::max();
+					return false;
+				}
 				try {
 					value = std::stoll(s);
 					return true;
@@ -629,8 +641,10 @@ namespace daotk {
 
 			bool get_value(int i, unsigned long long& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<unsigned long long>::max();
+					return false;
+				}
 				try {
 					value = std::stoull(s);
 					return true;
@@ -642,8 +656,10 @@ namespace daotk {
 
 			bool get_value(int i, float& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<float>::quiet_NaN();
+					return false;
+				}
 				try {
 					value = std::stof(s);
 					return true;
@@ -655,8 +671,10 @@ namespace daotk {
 
 			bool get_value(int i, double& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<double>::quiet_NaN();
+					return false;
+				}
 				try {
 					value = std::stod(s);
 					return true;
@@ -668,8 +686,10 @@ namespace daotk {
 
 			bool get_value(int i, long double& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value = std::numeric_limits<long double>::quiet_NaN();
+					return false;
+				}
 				try {
 					value = std::stold(s);
 					return true;
@@ -681,16 +701,19 @@ namespace daotk {
 
 			bool get_value(int i, std::string& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					value.clear();
+					return false;
+				}
 				value = s;
 				return true;
 			}
 
 			bool get_value(int i, datetime& value) {
 				const char* s = get_field_data(i);
-				if (s == nullptr) return false;
-
+				if (s == nullptr) {
+					return false;
+				}
 				value.from_sql(s);
 				return true;
 			}
